@@ -152,3 +152,63 @@ apt-get install dnsutils
 host -t PTR 192.241.1.4
 ```
 Jika berhasil maka akan terlihat gambar seperti dibawah ini
+
+## Soal 6
+Agar dapat tetap dihubungi ketika DNS Server Yudhistira bermasalah, buat juga Werkudara sebagai DNS Slave untuk domain utama.
+
+Edit file `/etc/bind/named.conf.local` pada Yudhistira. Lalu ubah bagian abimanyu menjadi seperti dibawah ini
+```
+zone "abimanyu.IT16.com" {
+        type master;
+        file "/etc/bind/jarkom/abimanyu.IT16.com";
+        also-notify { 192.241.1.4; };
+        allow-transfer { 192.241.1.4; };
+};
+```
+
+Edit file `abimanyu.IT16.com` menjadi seperti dibawah ini
+```
+;
+;BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     abimanyu.IT16.com. root.abimanyu.IT16.com. (
+                2               ; Serial
+                604800          ; Refresh
+                86400           ; Retry
+                2419200         ; Expire
+                604800 )        ; Negative Cache TTL
+;
+@       IN      NS      abimanyu.IT16.com.
+@       IN      A       192.241.4.3
+www     IN      CNAME   abimanyu.IT16.com.
+parikesit IN    A       192.241.4.3
+ns1     IN      A       192.241.1.5
+baratayuda IN   NS      ns1
+```
+Kemudian restart bind9 dengan perintah `service bind9 restart`
+
+Setelah menyelesaikan semua yang di Yuhistira lalu bukalah Werkudara untuk menginstal bind9
+```
+apt-get update
+apt-get install bind9 -y
+```
+
+setelah menginstall bind9 di Wekudara edit file `/etc/bind/named.conf.local` menjadi
+```
+zone "abimanyu.IT16.com" {
+    type slave;
+    masters { 192.241.1.4; };
+    file "/var/lib/bind/abimanyu.IT16.com";
+};
+```
+Kemudian restart bind9 dengan perintah `service bind9 restart`
+
+Setelah restart bind9 untuk cek jika DNS SLAVE sudah berjalan matikan DNS MASTER lalu cek menggunakan
+```
+nslookup abimanyu.IT16.com
+
+ping abimanyu.IT16.com
+```
+Jika berhasil maka akan terlihat gambar seperti dibawah ini
+
