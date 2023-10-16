@@ -204,7 +204,7 @@ zone "abimanyu.IT16.com" {
 ```
 Kemudian restart bind9 dengan perintah `service bind9 restart`
 
-Setelah restart bind9 untuk cek jika DNS SLAVE sudah berjalan matikan DNS MASTER lalu cek menggunakan
+Setelah restart bind9 untuk cek jika DNS SLAVE sudah berjalan matikan bind9 DNS MASTER dengan `service bind9 stop` lalu cek menggunakan
 ```
 nslookup abimanyu.IT16.com
 
