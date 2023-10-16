@@ -166,26 +166,6 @@ zone "abimanyu.IT16.com" {
 };
 ```
 
-Edit file `abimanyu.IT16.com` menjadi seperti dibawah ini
-```
-;
-;BIND data file for local loopback interface
-;
-$TTL    604800
-@       IN      SOA     abimanyu.IT16.com. root.abimanyu.IT16.com. (
-                2               ; Serial
-                604800          ; Refresh
-                86400           ; Retry
-                2419200         ; Expire
-                604800 )        ; Negative Cache TTL
-;
-@       IN      NS      abimanyu.IT16.com.
-@       IN      A       192.241.4.3
-www     IN      CNAME   abimanyu.IT16.com.
-parikesit IN    A       192.241.4.3
-ns1     IN      A       192.241.1.5
-baratayuda IN   NS      ns1
-```
 Kemudian restart bind9 dengan perintah `service bind9 restart`
 
 Setelah menyelesaikan semua yang di Yuhistira lalu bukalah Werkudara untuk menginstal bind9
@@ -210,5 +190,112 @@ nslookup abimanyu.IT16.com
 
 ping abimanyu.IT16.com
 ```
+Jika berhasil maka akan terlihat gambar seperti dibawah ini dengan kondisi bind9 di Yudhistira di stop
+
+![nomer6](https://github.com/tarishaicha/Jarkom-Modul-2-IT16-2023/assets/102363994/f79e8cd1-3fe9-4e5f-88a7-0cce60221f97)
+
+## Soal 7
+Seperti yang kita tahu karena banyak sekali informasi yang harus diterima, buatlah subdomain khusus untuk perang yaitu baratayuda.abimanyu.yyy.com dengan alias www.baratayuda.abimanyu.yyy.com yang didelegasikan dari Yudhistira ke Werkudara dengan IP menuju ke Abimanyu dalam folder Baratayuda.
+
+
+Edit file `abimanyu.IT16.com` menjadi seperti dibawah ini
+```
+;
+;BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     abimanyu.IT16.com. root.abimanyu.IT16.com. (
+                2               ; Serial
+                604800          ; Refresh
+                86400           ; Retry
+                2419200         ; Expire
+                604800 )        ; Negative Cache TTL
+;
+@       IN      NS      abimanyu.IT16.com.
+@       IN      A       192.241.4.3
+www     IN      CNAME   abimanyu.IT16.com.
+parikesit IN    A       192.241.4.3
+ns1     IN      A       192.241.1.5
+baratayuda IN   NS      ns1
+```
+Kemudian restart bind9 dengan perintah `service bind9 restart`
+
+Setelah menyelesaikan semua yang di Yuhistira lalu bukalah Werkudara edit file `/etc/bind/named.conf.local` tambahkan
+```
+zone "baratayuda.abimanyu.IT16.com" {
+    type master;
+    file "/etc/bind/baratayuda/baratayuda.abimanyu.IT16.com";
+};
+```
+
+lalu buat direktori baratayuda dengan `mkdir /etc/bind/baratayuda`
+
+Copykan file `db.local` pada path `/etc/bind` ke dalam folder jarkom yang baru saja dibuat
+`cp /etc/bind/db.local /etc/bind/jarkom/baratayuda/abimanyu.IT16.com`
+
+lalu edit file `/etc/bind/jarkom/baratayuda/abimanyu.IT16.com` menjadi
+```
+;
+;BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     baratayuda.abimanyu.IT16.com. root.baratayuda.abimanyu.IT16.com. (
+                2               ; Serial
+                604800          ; Refresh
+                86400           ; Retry
+                2419200         ; Expire
+                604800 )        ; Negative Cache TTL
+;
+@       IN      NS      baratayuda.abimanyu.IT16.com.
+@       IN      A       192.241.1.5
+www     IN      CNAME   baratayuda.abimanyu.IT16.com.
+```
+
+Kemudian restart bind9 dengan perintah `service bind9 restart`
+
+Setelah restart bind9 untuk cek jika DNS SLAVE sudah berjalan matikan bind9 DNS MASTER dengan `service bind9 stop` lalu cek menggunakan
+```
+ping baratayuda.abimanyu.IT16.com
+ping www.baratayuda.abimanyu.IT16.com
+```
+
 Jika berhasil maka akan terlihat gambar seperti dibawah ini
+![nomer7](https://github.com/tarishaicha/Jarkom-Modul-2-IT16-2023/assets/102363994/9a811fa9-5af1-4253-beb3-ad4109b60b7c)
+
+![nomer7 2](https://github.com/tarishaicha/Jarkom-Modul-2-IT16-2023/assets/102363994/8961e41d-9f29-4fb8-8b32-1921ce5e72a0)
+
+## Soal 8
+Untuk informasi yang lebih spesifik mengenai Ranjapan Baratayuda, buatlah subdomain melalui Werkudara dengan akses rjp.baratayuda.abimanyu.yyy.com dengan alias www.rjp.baratayuda.abimanyu.yyy.com yang mengarah ke Abimanyu.
+
+edit file `/etc/bind/jarkom/baratayuda/abimanyu.IT16.com` di Werkudara menjadi
+```
+;
+;BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     baratayuda.abimanyu.IT16.com. root.baratayuda.abimanyu.IT16.com. (
+                2               ; Serial
+                604800          ; Refresh
+                86400           ; Retry
+                2419200         ; Expire
+                604800 )        ; Negative Cache TTL
+;
+@       IN      NS      baratayuda.abimanyu.IT16.com.
+@       IN      A       192.241.1.5
+www     IN      CNAME   baratayuda.abimanyu.IT16.com.
+rjp     IN      CNAME   baratayuda.abimanyu.IT16.com.
+```
+Kemudian restart bind9 dengan perintah `service bind9 restart`
+
+Setelah restart bind9 untuk cek jika DNS SLAVE sudah berjalan matikan bind9 DNS MASTER dengan `service bind9 stop` lalu cek menggunakan
+```
+ping rjp.baratayuda.abimanyu.IT16.com
+```
+
+Jika berhasil maka akan terlihat gambar seperti dibawah ini
+![nomer8](https://github.com/tarishaicha/Jarkom-Modul-2-IT16-2023/assets/102363994/9b31764b-c970-4ae5-8251-dca4026535b5)
+
+##Soal 9
+Arjuna merupakan suatu Load Balancer Nginx dengan tiga worker (yang juga menggunakan nginx sebagai webserver) yaitu Prabakusuma, Abimanyu, dan Wisanggeni. Lakukan deployment pada masing-masing worker.
+
 
