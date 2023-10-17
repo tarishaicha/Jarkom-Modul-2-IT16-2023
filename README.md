@@ -298,4 +298,128 @@ Jika berhasil maka akan terlihat gambar seperti dibawah ini
 ##Soal 9
 Arjuna merupakan suatu Load Balancer Nginx dengan tiga worker (yang juga menggunakan nginx sebagai webserver) yaitu Prabakusuma, Abimanyu, dan Wisanggeni. Lakukan deployment pada masing-masing worker.
 
+Masuk ke dalam Load Balancerr yaitu Arjuna lalu tambahkan pada `/root/.bashrc` script dibawah ini
+```
+apt-get update
+apt-get install nginx -y
+
+echo 'server {
+        listen 80;
+        server_name arjuna;
+
+        location / {
+                proxy_pass http://backend;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                }
+        }' > /etc/nginx/sites-available/default
+
+service bind9 restart
+```
+
+Setelah Arjuna selesai sekarang bukalah Abimanyu dan tambahkan pada `/root/.bashrc` script dibawah ini
+```
+service php7.0-fpm start
+
+echo 'server {
+        listen 80;
+
+        root /var/www/jarkom;
+        index index.php index.html index.htm index.nginx-debian.html;
+
+        location / {
+                try_files $uri $uri/ /index.php?$query_string;
+        }
+
+        location ~ \.php$ {
+                include snippets/fastcgi-php.conf;
+                fastcgi_pass unix:/run/php/php7.0-fpm.sock;
+        }
+
+        location ~ /\.ht {
+                deny all;
+        }
+
+        server_name _;
+}' > /etc/nginx/sites-available/jarkom
+
+ln -s /etc/nginx/sites-available/jarkom /etc/nginx/sites-enabled/jarkom
+
+rm /etc/nginx/sites-enabled/default
+
+service nginx restart
+```
+
+Jika berhasil maka anda akan dapat melakukan lynx di client untuk akses webnya masing masing
+
+##Soal 10
+Kemudian gunakan algoritma Round Robin untuk Load Balancer pada Arjuna. Gunakan server_name pada soal nomor 1. Untuk melakukan pengecekan akses alamat web tersebut kemudian pastikan worker yang digunakan untuk menangani permintaan akan berganti ganti secara acak. Untuk webserver di masing-masing worker wajib berjalan di port 8001-8003. Contoh
+    - Prabakusuma:8001
+    - Abimanyu:8002
+    - Wisanggeni:8003
+
+
+Masuk ke dalam Load Balancerr yaitu Arjuna lalu buka `/root/.bashrc` dan tambahjan upstream pada bagian script dibawah ini
+```
+echo '
+upstream backend {
+        server 192.241.4.2:8001;
+        server 192.241.4.3:8002;
+        server 192.241.4.4:8003;
+        }
+
+server {
+        listen 80;
+
+        root /var/www/jarkom;
+        index index.php index.html index.htm index.nginx-debian.html;
+
+        location / {
+                try_files $uri $uri/ /index.php?$query_string;
+        }
+
+        location ~ \.php$ {
+                include snippets/fastcgi-php.conf;
+                fastcgi_pass unix:/run/php/php7.0-fpm.sock;
+        }
+
+        location ~ /\.ht {
+                deny all;
+        }
+
+        server_name _;
+}' > /etc/nginx/sites-available/jarkom
+```
+
+Setelah Arjuna selesai sekarang bukalah Abimanyu dan tambahkan pada `/root/.bashrc` script dibawah ini
+```
+echo 'server {
+        listen 8002;
+
+        root /var/www/jarkom;
+        index index.php index.html index.htm index.nginx-debian.html;
+
+        root /var/www/jarkom;
+        index index.php index.html index.htm index.nginx-debian.html;
+
+        location / {
+                try_files $uri $uri/ /index.php?$query_string;
+        }
+
+        location ~ \.php$ {
+                include snippets/fastcgi-php.conf;
+                fastcgi_pass unix:/run/php/php7.0-fpm.sock;
+        }
+
+        location ~ /\.ht {
+                deny all;
+        }
+
+        server_name _;
+}' > /etc/nginx/sites-available/jarkom
+```
+
+Jika berhasil maka anda akan dapat melakukan lynx di client untuk akses webnya masing masing
 
