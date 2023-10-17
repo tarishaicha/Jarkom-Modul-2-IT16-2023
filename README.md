@@ -423,3 +423,199 @@ echo 'server {
 
 Jika berhasil maka anda akan dapat melakukan lynx di client untuk akses webnya masing masing
 
+## Soal 11
+Selain menggunakan Nginx, lakukan konfigurasi Apache Web Server pada worker Abimanyu dengan web server www.abimanyu.yyy.com. Pertama dibutuhkan web server dengan DocumentRoot pada /var/www/abimanyu.yyy
+
+Lakukan instalasi yang dibutuhkan untuk konfigurasi Apache
+```
+apt-get update
+apt-get install apache2 -y
+apt-get install php -y
+apt-get install nginx -y
+apt-get install wget -y
+apt-get install unzip -y
+```
+Lakukan download, unzip serta pengalokasian file yang telah didownload dari resource file yang sudah diberikan
+```
+wget -O '/var/www/abimanyu.IT16.com' 'https://drive.google.com/uc?export=download&id=1a4V23hwK9S7hQEDEcv9FL14UkkrHc-Zc'
+unzip -o /var/www/abimanyu.IT16.com -d /var/www/
+mv /var/www/abimanyu.yyy.com /var/www/abimanyu.IT16
+rm /var/www/abimanyu.IT16.com
+rm -rf /var/www/abimanyu.yyy.com
+
+cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/abimanyu.IT16.com.conf
+rm /etc/apache2/sites-available/000-default.conf
+```
+Lanjutkan untuk membuat konfigurasi pada `/etc/apache2/sites-available/abimanyu-IT16.conf`
+```
+echo '
+<VirtualHost *:80>
+    ServerName abimanyu.IT16.com
+    ServerAlias www.abimanyu.IT16.com
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/abimanyu.IT16
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+' > /etc/apache2/sites-available/abimanyu.IT16.com.conf
+```
+Jangan lupa untuk melakukan, perintah ini setiap selesai melakukan perubahan.
+```
+a2ensite abimanyu.IT16.com.conf
+service apache2 restart
+```
+a2ensite = untuk mengaktifkan (ENABLE) konfigurasi website yang telah dibuat.
+service apache2 restart = untuk melakukan restart apache2 agar perubahan yang telah dilakukan teraplikasikan.
+
+Selanjutnya lakukan `lynx abimanyu.IT16.com` pada client Nakula. Jika berhasil, maka akan terlihat gambar seperti berikut.
+![WhatsApp Image 2023-10-16 at 3 54 15 PM](https://github.com/tarishaicha/Jarkom-Modul-2-IT16-2023/assets/107459188/787fc05b-1a7a-4f76-b21c-829e9d155815)
+
+## Soal 12
+Setelah itu ubahlah agar url www.abimanyu.yyy.com/index.php/home menjadi www.abimanyu.yyy.com/home.
+
+Untuk melkukan konfigurasi, ditambahkan kode berikut pada `/etc/apache2/sites-available/abimanyu-IT16.conf`
+```
+echo '
+<VirtualHost *:80>
+    ServerName abimanyu.IT16.com
+    ServerAlias www.abimanyu.IT16.com
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/abimanyu.IT16
+
+    #no12
+    <Directory /var/www/abimanyu.IT16/index.php/home>
+                Options +Indexes
+    </Directory>
+
+    Alias "/home" "/var/www/abimanyu.IT16/index.php/home"
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+' > /etc/apache2/sites-available/abimanyu.IT16.com.conf
+```
+Jangan lupa untuk melakukan, perintah ini setiap selesai melakukan perubahan.
+```
+a2ensite abimanyu.IT16.com.conf
+service apache2 restart
+```
+Selanjutnya lakukan `lynx abimanyu.IT16.com/home` pada client Nakula. Jika berhasil, maka akan terlihat gambar seperti berikut.
+![WhatsApp Image 2023-10-16 at 3 54 15 PM](https://github.com/tarishaicha/Jarkom-Modul-2-IT16-2023/assets/107459188/787fc05b-1a7a-4f76-b21c-829e9d155815)
+
+## Soal 13
+Selain itu, pada subdomain www.parikesit.abimanyu.yyy.com, DocumentRoot disimpan pada /var/www/parikesit.abimanyu.yyy
+
+Lakukan download, unzip serta pengalokasian file yang telah didownload dari resource file yang sudah diberikan
+```
+wget -O '/var/www/parikesit.abimanyu.IT16.com' 'https://drive.google.com/uc?export=download&id=1LdbYntiYVF_NVNgJis1GLCLPEGyIOreS'
+unzip -o /var/www/parikesit.abimanyu.IT16.com -d /var/www/
+mv /var/www/parikesit.abimanyu.yyy.com /var/www/parikesit.abimanyu.IT16
+rm /var/www/parikesit.abimanyu.IT16.com
+rm -rf /var/www/parikesit.abimanyu.yyy.com
+mkdir /var/www/parikesit.abimanyu.IT16/secret
+rm -rf /var/www/parikesit.abimanyu.IT16/parikesit.abimanyu.yyy.com
+```
+Masukkan konfigurasi untuk website pada /etc/apache2/s
+sites-available/parikesit-abimanyu-IT16.conf
+```
+echo '
+<VirtualHost *:80>
+    ServerName parikesit.abimanyu.IT16.com
+    ServerAlias www.parikesit.abimanyu.IT16.com
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/parikesit.abimanyu.IT16
+
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>' > /etc/apache2/sites-available/parikesit.abimanyu.IT16.com.conf
+```
+Jangan lupa untuk melakukan, perintah ini setiap selesai melakukan perubahan.
+```
+a2ensite parikesit.abimanyu.IT16.com.conf
+service apache2 restart
+```
+Selanjutnya lakukan `lynx parikesit.abimanyu.IT16.com` pada client Nakula. Jika berhasil, maka akan terlihat gambar seperti berikut.
+![WhatsApp Image 2023-10-16 at 7 34 24 PM (2)](https://github.com/tarishaicha/Jarkom-Modul-2-IT16-2023/assets/107459188/a4a24970-a77a-4198-b1f3-d79c0063353a)
+
+## Soal 14
+Pada subdomain tersebut folder /public hanya dapat melakukan directory listing sedangkan pada folder /secret tidak dapat diakses (403 Forbidden).
+
+Untuk melakukan ini, maka menambahkan kode pada /etc/apache2/sites-available/parikesit-abimanyu-IT16.conf untuk menyalakan directory listing pada folder /public, dan mematikan directory listing pada /secret
+```
+echo '
+<VirtualHost *:80>
+    ServerName parikesit.abimanyu.IT16.com
+    ServerAlias www.parikesit.abimanyu.IT16.com
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/parikesit.abimanyu.IT16
+
+#no14
+  <Directory /var/www/parikesit.abimanyu.IT16/public>
+          Options +Indexes
+  </Directory>
+
+  <Directory /var/www/parikesit.abimanyu.IT16/secret>
+          Options -Indexes
+  </Directory>
+
+  Alias "/public" "/var/www/parikesit.abimanyu.IT16/public"
+  Alias "/secret" "/var/www/parikesit.abimanyu.IT16/secret"
+
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+' > /etc/apache2/sites-available/parikesit.abimanyu.IT16.com.conf
+```
+Jangan lupa untuk melakukan, perintah ini setiap selesai melakukan perubahan.
+```
+a2ensite parikesit.abimanyu.IT16.com.conf
+service apache2 restart
+```
+Selanjutnya lakukan `lynx parikesit.abimanyu.IT16.com/public` dan  `lynx parikesit.abimanyu.IT16.com/secret` pada client Nakula. Jika berhasil, maka akan terlihat gambar seperti berikut.
+![WhatsApp Image 2023-10-16 at 7 46 16 PM](https://github.com/tarishaicha/Jarkom-Modul-2-IT16-2023/assets/107459188/7cbcab9f-4322-449f-bfdf-ae52edab83b5)
+
+![WhatsApp Image 2023-10-16 at 7 46 49 PM](https://github.com/tarishaicha/Jarkom-Modul-2-IT16-2023/assets/107459188/be5cfa7b-c12f-4c6e-976f-00efeeca3786)
+
+## Soal 15
+Buatlah kustomisasi halaman error pada folder /error untuk mengganti error kode pada Apache. Error kode yang perlu diganti adalah 404 Not Found dan 403 Forbidden.
+
+Untuk melakukan hal ini maka tambahkan kode berikut pada `/etc/apache2/sites-available/parikesit-abimanyu-IT16.conf`
+```
+echo '
+<VirtualHost *:80>
+  ServerAdmin webmaster@localhost
+  DocumentRoot /var/www/parikesit.abimanyu.IT16
+  ServerName parikesit.abimanyu.IT16.com
+  ServerAlias www.parikesit.abimanyu.IT16.com
+
+  <Directory /var/www/parikesit.abimanyu.IT16/public>
+          Options +Indexes
+  </Directory>
+
+  <Directory /var/www/parikesit.abimanyu.IT16/secret>
+          Options -Indexes
+  </Directory>
+
+  Alias "/public" "/var/www/parikesit.abimanyu.IT16/public"
+  Alias "/secret" "/var/www/parikesit.abimanyu.IT16/secret"
+
+#no15
+  ErrorDocument 404 /error/404.html
+  ErrorDocument 403 /error/403.html
+
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>' > /etc/apache2/sites-available/parikesit.abimanyu.IT16.com.conf
+```
+Jangan lupa untuk melakukan, perintah ini setiap selesai melakukan perubahan.
+```
+a2ensite parikesit.abimanyu.IT16.com.conf
+service apache2 restart
+```
+Selanjutnya lakukan `lynx parikesit.abimanyu.IT16.com/testerror` dan  `lynx parikesit.abimanyu.IT16.com/secret` pada client Nakula. Jika berhasil, maka akan terlihat gambar seperti berikut.
+![WhatsApp Image 2023-10-16 at 7 56 41 PM](https://github.com/tarishaicha/Jarkom-Modul-2-IT16-2023/assets/107459188/822b8541-9003-4eed-8436-c42664005565)
+
+![WhatsApp Image 2023-10-16 at 7 57 17 PM](https://github.com/tarishaicha/Jarkom-Modul-2-IT16-2023/assets/107459188/40a691cf-f1d3-4ef4-b9ae-e0ba1900c7bf)
+
+
