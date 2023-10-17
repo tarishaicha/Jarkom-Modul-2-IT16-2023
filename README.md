@@ -148,10 +148,10 @@ Lalu, pada client nodes Nakula untuk mengecek apakah konfigurasi sudah benar ata
 apt-get update
 apt-get install dnsutils
 
-//Kembalikan nameserver agar tersambung dengan Yudhistira
-host -t PTR 192.241.1.4
+host -t PTR 192.241.4.3
 ```
 Jika berhasil maka akan terlihat gambar seperti dibawah ini
+![WhatsApp Image 2023-10-14 at 6 11 23 PM](https://github.com/tarishaicha/Jarkom-Modul-2-IT16-2023/assets/107459188/5d56cc0d-b996-4c6a-be72-3204777008af)
 
 ## Soal 6
 Agar dapat tetap dihubungi ketika DNS Server Yudhistira bermasalah, buat juga Werkudara sebagai DNS Slave untuk domain utama.
