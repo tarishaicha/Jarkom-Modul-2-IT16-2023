@@ -295,7 +295,7 @@ ping rjp.baratayuda.abimanyu.IT16.com
 Jika berhasil maka akan terlihat gambar seperti dibawah ini
 ![nomer8](https://github.com/tarishaicha/Jarkom-Modul-2-IT16-2023/assets/102363994/9b31764b-c970-4ae5-8251-dca4026535b5)
 
-##Soal 9
+## Soal 9
 Arjuna merupakan suatu Load Balancer Nginx dengan tiga worker (yang juga menggunakan nginx sebagai webserver) yaitu Prabakusuma, Abimanyu, dan Wisanggeni. Lakukan deployment pada masing-masing worker.
 
 Masuk ke dalam Load Balancerr yaitu Arjuna lalu tambahkan pada `/root/.bashrc` script dibawah ini
@@ -354,7 +354,7 @@ service nginx restart
 
 Jika berhasil maka anda akan dapat melakukan lynx di client untuk akses webnya masing masing
 
-##Soal 10
+## Soal 10
 Kemudian gunakan algoritma Round Robin untuk Load Balancer pada Arjuna. Gunakan server_name pada soal nomor 1. Untuk melakukan pengecekan akses alamat web tersebut kemudian pastikan worker yang digunakan untuk menangani permintaan akan berganti ganti secara acak. Untuk webserver di masing-masing worker wajib berjalan di port 8001-8003. Contoh
     - Prabakusuma:8001
     - Abimanyu:8002
